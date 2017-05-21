@@ -31,7 +31,7 @@ public class Lista {
 		if(last>lista.length-1){
 			this.duplicateSizeAndCopy();
 		}
-		notify();
+		notifyAll();// para el peek y el pop
 	}
 	
 	public synchronized void addAll(Lista b){
@@ -49,13 +49,26 @@ public class Lista {
         lista=nuevaLista;
 	}
 	
-	public synchronized int peek(){
+	public synchronized int peek(){ // Dijo que si está vacia espera.
+		while (last == 0) { // pongo while porque en monitores no va if para la espera
+		      { try {// esto es sintaxis para que java no chille
+					this.wait(); 
+					}
+			      	catch (InterruptedException e) {}
+			      }
+		}	
 		return lista[0];
 	}
 	
-	public synchronized int pop() throws InterruptedException{
+	public synchronized int pop(){ // igual a peek 
+		while (last == 0) {
+		      { try {
+					this.wait(); 
+					}
+			      	catch (InterruptedException e) {}
+			      }
+		}
 		int res = lista[0];
-		if (last==0)wait();
 		for (int i=1;i<last;i++){
 			lista[i-1]=lista[i];
 		}
@@ -72,7 +85,7 @@ public class Lista {
 		
 	}
 	
-	public Lista mergesort(Lista list, int n) throws InterruptedException{
+	public Lista mergesort(Lista list, int n) throws InterruptedException{ 
 		if(list.size()<=1)return list;
 		Lista left = list.getSublist(0,list.size()/2);
 		Lista  right = list.getSublist(list.size()/2, list.size());
