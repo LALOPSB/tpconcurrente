@@ -7,6 +7,8 @@ public class TestLista {
 	Lista prueba;
 	Lista prueba2;
 	Lista pruebasort;
+	Lista prueba3;
+	Lista pruebasort3;
 	Lista resultado;
 	User user;
 
@@ -39,7 +41,46 @@ public class TestLista {
 		pruebasort.add(8);
 		pruebasort.add(9);
 		pruebasort.add(21);
-		user = new User(prueba, 4);
+		
+		prueba3 = new Lista(20);
+		prueba3.add(3);
+		prueba3.add(21);
+		prueba3.add(8);
+		prueba3.add(4);
+		prueba3.add(9);
+		prueba3.add(0);
+		prueba3.add(6);
+		prueba3.add(5);
+		prueba3.add(99);
+		prueba3.add(32);
+		prueba3.add(212);
+		prueba3.add(85);
+		prueba3.add(45);
+		prueba3.add(995);
+		prueba3.add(52);
+		prueba3.add(65);
+		prueba3.add(527);
+		prueba3.add(215);
+		
+		pruebasort3 = new Lista(20);
+		pruebasort3.add(0);
+		pruebasort3.add(3);
+		pruebasort3.add(4);
+		pruebasort3.add(5);
+		pruebasort3.add(6);
+		pruebasort3.add(8);
+		pruebasort3.add(9);
+		pruebasort3.add(21);
+		pruebasort3.add(32);
+		pruebasort3.add(45);
+		pruebasort3.add(52);
+		pruebasort3.add(65);
+		pruebasort3.add(85);
+		pruebasort3.add(99);
+		pruebasort3.add(212);
+		pruebasort3.add(215);
+		pruebasort3.add(527);
+		pruebasort3.add(995);
 	}
 
 	@Test
@@ -88,26 +129,33 @@ public class TestLista {
 
 	@Test
 	public void testSortSecuencial() {
-	    prueba.sortSecuencial();
+		prueba.sortSecuencial();
 		for (int i = 0; i < pruebasort.size(); i++) {
 			assertEquals(prueba.pop(), pruebasort.pop());
-		 }
+		}
+	}
+	
+	@Test
+	public void testSort3S() {
+		prueba3.sortSecuencial();
+		for (int i = 0; i < prueba3.size(); i++) {
+			assertEquals(prueba3.pop(), pruebasort3.pop());
+		}
+	}
+
+	@Test
+	public void testSort3P() {
+		prueba3.sort(8);
+		for (int i = 0; i < prueba3.size(); i++) {
+			assertEquals(prueba3.pop(), pruebasort3.pop());
+		}
 	}
 
 	@Test
 	public void testSort() {
-	    prueba.sort(4);
-		for (int i = 0; i < pruebasort.size(); i++) {
+		prueba.sort(4);
+		for (int i = 0; i < prueba.size(); i++) {
 			assertEquals(prueba.pop(), pruebasort.pop());
-		 }
-	}
-
-	@Test
-	public void testMerge() {
-		user.start();
-		Lista listaFinal = user.getLista();
-		for (int i = 0; i < listaFinal.size(); i++) {
-			// System.out.println(user.getLista().getLista()[i]);
 		}
 	}
 

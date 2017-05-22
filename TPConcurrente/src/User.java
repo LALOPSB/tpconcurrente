@@ -1,34 +1,18 @@
 
-public class User extends Thread{
-	
+public class User extends Thread {
+
 	private Lista lista;
-	int n;
-	
-	User(Lista lista, int n){
-		this.lista= lista;
-		this.n=n;
-	}
-	
-	public void run(){
-		try {
-			sort(n);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+	int nThreads;
+	private Barrera miBarrera;
 
-	public void sort(int numeroDeThreads) throws InterruptedException{
-		lista.mergesort(lista,n);
-	}
-	
-	public Lista getLista() {
-		return lista;
-	}
-
-	public void setLista(Lista lista) {
+	User(Lista lista, int n, Barrera b) {
 		this.lista = lista;
+		this.nThreads = n;
+		this.miBarrera = b;
+	}
+
+	public void run() {
+		lista.mergesort(nThreads, miBarrera);
 	}
 
 }

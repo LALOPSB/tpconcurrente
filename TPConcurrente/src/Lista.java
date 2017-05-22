@@ -89,42 +89,52 @@ public class Lista {
 
 	}
 
+	private void reemplazarListaCon(Lista l) {
+		int[] a = l.getLista();
+		for (int i = 0; i < l.size(); i++) {
+			lista[i] = a[i];
+		}
+	}
+
 	public void sortSecuencial() {
-		Lista l = this.mergesortSec(this);
-		int[] a = l.getLista();
-		for (int i = 0; i < l.size(); i++) {
-			lista[i] = a[i];
+		this.mergesortSec();
+	}
+
+	private synchronized void mergesortSec() {
+		if (this.size() > 1) {
+			Lista left = this.getSublist(0, this.size() / 2);
+			Lista right = this.getSublist(this.size() / 2, this.size());
+			left.mergesortSec();
+			right.mergesortSec();
+			this.reemplazarListaCon(merge(left, right));
 		}
 	}
 
-	private synchronized Lista mergesortSec(Lista list) {
-		if (list.size() > 1) {
-			Lista left = list.getSublist(0, list.size() / 2);
-			Lista right = list.getSublist(list.size() / 2, list.size());
-			Lista ll = list.mergesortSec(left);
-			Lista lr = list.mergesortSec(right);
-			list = merge(ll, lr);
-		}
-		return list;
+	public void sort(int n) { 
+		Barrera b = new Barrera(1);  // Solo porque mergesort precisa una barrera...
+		this.mergesort(n, b);
 	}
 
-	public void sort(int n) {   // Ahora hay que agregar threads!!!!
-		Lista l = this.mergesort(this, n);
-		int[] a = l.getLista();
-		for (int i = 0; i < l.size(); i++) {
-			lista[i] = a[i];
+	public synchronized void mergesort(int n, Barrera miBarrera) { 
+		if (this.size() > 1) {
+			if (n == 1) { // Si no puedo usar más de un thread, va secuencial
+				this.mergesortSec();
+			} else {
+				// Si me pide más de un thread, largo 2 threads para hacer los
+				// mergesort, pero reparto los threads activos entre mis hijos 
+				// (mi thread se inactiva en seguida si no es n==1)
+				Barrera b = new Barrera(2);
+				Lista left = this.getSublist(0, this.size() / 2);
+				Lista right = this.getSublist(this.size() / 2, this.size());
+				User l = new User(left, n / 2, b);       // crea la clase de thread que hace mergesort
+				User r = new User(right, n - (n / 2), b);// crea la clase de thread que hace mergesort
+				l.start(); // larga el primer thread cuyo efecto es ordenar left in place
+				r.start(); // larga el segundo thread cuyo efecto es ordenar right in place 
+				b.esperar(); // Espera a que ambos thread le avisen que terminaron
+				this.reemplazarListaCon(merge(left, right)); // merge de left y right, y reemplazar in place
+			}
 		}
-	}
-
-	private synchronized Lista mergesort(Lista list, int n) { // Ahora hay que agregar threads!!!!
-		if (list.size() > 1) {
-			Lista left = list.getSublist(0, list.size() / 2);
-			Lista right = list.getSublist(list.size() / 2, list.size());
-			Lista ll = list.mergesort(left, n);
-			Lista lr = list.mergesort(right, n);
-			list = merge(ll, lr);
-		}
-		return list;
+		miBarrera.avisar(); // Avisar al dueño de la barrera que yo terminé
 	}
 
 	// private synchronized Lista mergesort(Lista list, int n) throws
