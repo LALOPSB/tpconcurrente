@@ -10,7 +10,6 @@ public class TestLista {
 	Lista prueba3;
 	Lista pruebasort3;
 	Lista resultado;
-	User user;
 
 	@Before
 	public void setUp() {
@@ -161,7 +160,7 @@ public class TestLista {
 
 	public void printLista(Lista l) {
 		int[] a = l.getLista();
-		int t = l.getLast();
+		int t = l.size();
 		System.out.print("Tamaño: ");
 		System.out.println(t);
 		System.out.print(a[0]);
